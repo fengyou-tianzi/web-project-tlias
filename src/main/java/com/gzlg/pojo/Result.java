@@ -1,11 +1,13 @@
 package com.gzlg.pojo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 编码统一响应
  */
-@Data
+@Getter
+@Setter
 public class Result {
     //成功：1 失败：0
     private Integer code;
