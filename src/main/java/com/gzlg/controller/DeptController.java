@@ -22,9 +22,15 @@ public class DeptController {
      */
     @GetMapping("/depts")
     public Result findAll() {
+        // 记录请求信息
         log.info("收到查询所有部门的请求");
+        // 记录请求参数
+        log.debug("请求参数：无");
+        // 调用服务层查询
         List<Dept> deptList = deptService.findAll();
+        // 记录查询结果
         log.info("查询完成，共查询到 {} 条部门数据", deptList.size());
+        log.debug("查询结果：{}", deptList);
         return Result.success(deptList);
     }
 
