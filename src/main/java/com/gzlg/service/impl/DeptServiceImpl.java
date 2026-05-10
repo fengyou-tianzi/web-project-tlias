@@ -22,9 +22,7 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public List<Dept> findAll() {
-        log.info("开始查询所有部门");
         List<Dept> deptList = deptMapper.findAll();
-        log.info("查询完成，共查询到 {} 条部门数据", deptList.size());
         return deptList;
     }
 
