@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- 日志文件存放目录 -->
     <property name="LOG_HOME" value="./logs" />
+    <!-- 日志输出格式 -->
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" />
 
+    <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
+    <!-- 文件输出（按时间和大小滚动） -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -23,6 +27,7 @@
         </encoder>
     </appender>
 
+    <!-- 错误日志单独记录 -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -39,10 +44,12 @@
         </encoder>
     </appender>
 
+    <!-- 各框架日志级别：TRACE < DEBUG < INFO < WARN < ERROR -->
     <logger name="org.springframework" level="WARN" />
     <logger name="org.mybatis" level="INFO" />
     <logger name="org.hibernate" level="WARN" />
 
+    <!-- 根日志级别 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
