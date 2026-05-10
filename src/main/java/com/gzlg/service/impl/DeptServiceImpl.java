@@ -22,7 +22,9 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public List<Dept> findAll() {
+        log.debug("开始查询所有部门");
         List<Dept> deptList = deptMapper.findAll();
+        log.debug("查询完成, 共查询到{}条记录", deptList.size());
         return deptList;
     }
 
@@ -31,7 +33,9 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public void deleteById(Integer id) {
+        log.debug("开始删除部门, ID: {}", id);
         deptMapper.deleteById(id);
+        log.debug("删除部门完成, ID: {}", id);
     }
 
     /**
@@ -39,9 +43,11 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public void save(Dept dept) {
+        log.debug("开始保存部门, 部门名称: {}", dept.getName());
         dept.setCreateTime(LocalDateTime.now());
         dept.setUpdateTime(LocalDateTime.now());
         deptMapper.insert(dept);
+        log.debug("保存部门完成, 生成的ID: {}", dept.getId());
     }
 
     /**
@@ -49,7 +55,10 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public Dept getById(Integer id) {
-        return deptMapper.getBbyId(id);
+        log.debug("开始根据ID查询部门, ID: {}", id);
+        Dept dept = deptMapper.getBbyId(id);
+        log.debug("查询结果: {}", dept);
+        return dept;
     }
 
     /**
@@ -57,8 +66,10 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public void update(Dept dept) {
-       dept.setUpdateTime(LocalDateTime.now());
-       deptMapper.update(dept);
+        log.debug("开始修改部门信息, 部门ID: {}, 部门名称: {}", dept.getId(), dept.getName());
+        dept.setUpdateTime(LocalDateTime.now());
+        deptMapper.update(dept);
+        log.debug("修改部门信息完成");
     }
 
 }
