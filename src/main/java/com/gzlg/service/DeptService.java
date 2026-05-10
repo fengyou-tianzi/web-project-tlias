@@ -6,7 +6,17 @@ import java.util.List;
 
 public interface DeptService {
     /**
-     * 查新所有部门
+     * 查询所有部门
      */
     List<Dept> findAll();
+
+    /**
+     * 根据ID删除部门
+     */
+    void deleteById(Integer id);
+
+    /**
+     * 新增部门
+     */
+    void add(Dept dept);
 }

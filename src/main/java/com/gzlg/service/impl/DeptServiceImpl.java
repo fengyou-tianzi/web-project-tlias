@@ -17,7 +17,7 @@ public class DeptServiceImpl implements DeptService {
     private DeptMapper deptMapper;
 
     /**
-     * 查寻所有部门
+     * 查询所有部门
      */
     @Override
     public List<Dept> findAll() {
@@ -25,5 +25,25 @@ public class DeptServiceImpl implements DeptService {
         List<Dept> deptList = deptMapper.findAll();
         log.info("查询完成，共查询到 {} 条部门数据", deptList.size());
         return deptList;
+    }
+
+    /**
+     * 根据ID删除部门
+     */
+    @Override
+    public void deleteById(Integer id) {
+        log.info("开始删除部门，ID = {}", id);
+        deptMapper.deleteById(id);
+        log.info("删除完成，ID = {}", id);
+    }
+
+    /**
+     * 新增部门
+     */
+    @Override
+    public void add(Dept dept) {
+        log.info("开始新增部门，部门名称 = {}", dept.getName());
+        deptMapper.add(dept);
+        log.info("新增完成");
     }
 }
