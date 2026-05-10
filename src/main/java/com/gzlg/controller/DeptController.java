@@ -5,13 +5,13 @@ import com.gzlg.pojo.Result;
 import com.gzlg.service.DeptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/depts")
 public class DeptController {
 
     @Autowired
@@ -20,12 +20,46 @@ public class DeptController {
     /**
      * 查询所有部门
      */
-    @GetMapping("/depts")
+    @GetMapping
     public Result findAll() {
-        log.info("收到查询所有部门的请求");
         List<Dept> deptList = deptService.findAll();
-        log.info("查询完成，共查询到 {} 条部门数据", deptList.size());
         return Result.success(deptList);
+    }
+
+    /**
+     * 根据ID删除部门数据
+     */
+    @DeleteMapping
+    public Result delete(Integer id) {
+        deptService.deleteById(id);
+        return Result.success();
+    }
+
+    /**
+     * 添加部门数据
+     */
+    @PostMapping
+    public Result save(@RequestBody Dept dept) {
+        deptService.save(dept);
+        return Result.success();
+    }
+
+    /**
+     * 根据ID查询部门数据
+     */
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Integer id) {
+        Dept dept = deptService.getById(id);
+        return Result.success(dept);
+    }
+
+    /**
+     * 修改部门数据
+     */
+    @PutMapping
+    public Result update(@RequestBody Dept dept) {
+        deptService.update(dept);
+        return Result.success();
     }
 
 }

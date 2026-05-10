@@ -20,7 +20,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 当前日志文件路径 -->
         <file>${LOG_HOME}/application.log</file>
-        <!-- 滚动策略: 满足任一条件就创建新文件 -->
+        <!-- 滚动策略: 满足任一个条件就创建新文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 归档文件名格式: application-2024-01-01.1.log -->
             <fileNamePattern>${LOG_HOME}/application-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
