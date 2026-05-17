@@ -21,15 +21,13 @@
         <!-- 当前日志文件路径 -->
         <file>${LOG_HOME}/application.log</file>
         <!-- 滚动策略: 满足任一个条件就创建新文件 -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 归档文件名格式: application-2024-01-01.1.log -->
             <fileNamePattern>${LOG_HOME}/application-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- maxHistory: 保留最近7天的日志文件，超出的自动删除 -->
             <maxHistory>7</maxHistory>
             <!-- 按文件大小分割: 单个文件超过50MB时创建新文件 -->
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>50MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 部门管理实现类
+ */
 @Slf4j
 @Service
 public class DeptServiceImpl implements DeptService {

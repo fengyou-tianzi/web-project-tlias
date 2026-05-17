@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 部门管理
+ */
 @Slf4j
 @RestController
 @RequestMapping("/depts")

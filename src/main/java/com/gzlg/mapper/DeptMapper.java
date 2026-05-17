@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * 部门Mapper
+ */
 @Mapper
 public interface DeptMapper {
     /**

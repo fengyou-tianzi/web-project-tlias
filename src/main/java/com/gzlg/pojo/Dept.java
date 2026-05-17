@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * 部门类
+ */
 @Getter
 @Setter
 @AllArgsConstructor

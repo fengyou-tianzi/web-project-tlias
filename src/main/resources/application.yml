@@ -1,13 +1,28 @@
 #数据库链接信息
 spring:
+  # 数据源配置
   datasource:
+    # 数据库连接地址：jdbc:mysql://主机:端口/数据库名
     url: jdbc:mysql://localhost:3306/tlias
+    # MySQL 8.0+ 驱动类名
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库用户名
     username: root
+    # 数据库密码
     password: 123456
 
 #Mybatis配置
 mybatis:
   configuration:
+    # 开启控制台打印SQL日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启驼峰命名自动映射（数据库下划线字段映射为Java驼峰属性）
     map-underscore-to-camel-case: true
+
+# PageHelper 分页插件配置
+pagehelper:
+  # reasonable: 启用分页合理化，当 pageNum<=0 时自动查询第一页，pageNum>pages 时查询最后一页
+  reasonable: true
+  # helper-dialect: 指定分页使用的数据库方言为 MySQL
+  helper-dialect: mysql
+

@@ -1,9 +1,11 @@
 package com.gzlg.service;
 
 import com.gzlg.pojo.Dept;
-
 import java.util.List;
 
+/**
+ * 部门管理接口
+ */
 public interface DeptService {
     /**
      * 查新所有部门
