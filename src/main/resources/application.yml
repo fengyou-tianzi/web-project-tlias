@@ -14,8 +14,6 @@ spring:
 #Mybatis配置
 mybatis:
   configuration:
-    # 开启控制台打印SQL日志
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # 开启驼峰命名自动映射（数据库下划线字段映射为Java驼峰属性）
     map-underscore-to-camel-case: true
 
