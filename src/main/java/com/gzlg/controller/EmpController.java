@@ -26,7 +26,9 @@ public class EmpController {
      */
     @GetMapping
     public Result page(EmpQueryparam empQueryparam) {
+        log.info("条件分页查询员工信息, 查询参数: {}", empQueryparam);
         PageResult pageResult = empService.page(empQueryparam);
+        log.info("查询完成, 共{}条记录", pageResult.getTotal());
         return Result.success(pageResult);
     }
 
