@@ -20,9 +20,14 @@ mybatis:
     map-underscore-to-camel-case: true
 
 # PageHelper 分页插件配置
-pagehelper:
+page helper:
   # reasonable: 启用分页合理化，当 pageNum<=0 时自动查询第一页，pageNum>pages 时查询最后一页
   reasonable: true
   # helper-dialect: 指定分页使用的数据库方言为 MySQL
   helper-dialect: mysql
+
+#spring事务管理日志
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
 

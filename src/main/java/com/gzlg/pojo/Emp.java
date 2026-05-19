@@ -3,9 +3,11 @@ package com.gzlg.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 员工类
@@ -33,6 +35,7 @@ public class Emp {
     // 头像
     private String image;
     // 入职日期
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate entryDate;
     // 关联的部门ID
     private Integer deptId;
@@ -43,4 +46,6 @@ public class Emp {
 
     //封装部门名称
     private String deptName;
+    //封装员工经历
+    private List<EmpExpr> exprList;
 }

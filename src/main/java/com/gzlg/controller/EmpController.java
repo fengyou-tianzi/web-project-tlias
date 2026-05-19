@@ -1,14 +1,13 @@
 package com.gzlg.controller;
 
+import com.gzlg.pojo.Emp;
 import com.gzlg.pojo.EmpQueryparam;
 import com.gzlg.pojo.PageResult;
 import com.gzlg.pojo.Result;
 import com.gzlg.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 员工管理
@@ -30,6 +29,15 @@ public class EmpController {
         PageResult pageResult = empService.page(empQueryparam);
         log.info("查询完成, 共{}条记录", pageResult.getTotal());
         return Result.success(pageResult);
+    }
+
+    /**
+     * 添加员工
+     */
+    @PostMapping
+    public Result sava(@RequestBody Emp emp) {
+        empService.save(emp);
+        return Result.success();
     }
 
 }
