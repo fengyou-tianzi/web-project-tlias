@@ -1,5 +1,6 @@
 package com.gzlg.service.impl;
 
+import com.gzlg.exception.BusinessException;
 import com.gzlg.mapper.DeptMapper;
 import com.gzlg.pojo.Dept;
 import com.gzlg.service.DeptService;
@@ -37,6 +38,10 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public void deleteById(Integer id) {
         log.debug("开始删除部门, ID: {}", id);
+        Integer empCount = deptMapper.countByDeptId(id);
+        if (empCount != null && empCount > 0) {
+            throw new BusinessException("对不起, 当前部门下有员工, 不能直接删除");
+        }
         deptMapper.deleteById(id);
         log.debug("删除部门完成, ID: {}", id);
     }

@@ -82,4 +82,28 @@
         where id = #{id}
     </update>
 
+    <!-- 统计学员学历分布 -->
+    <select id="countByDegree" resultType="map">
+        SELECT CASE degree
+                   WHEN 1 THEN '初中'
+                   WHEN 2 THEN '高中'
+                   WHEN 3 THEN '大专'
+                   WHEN 4 THEN '本科'
+                   WHEN 5 THEN '硕士'
+                   ELSE '其他' END as name,
+               COUNT(*)           as value
+        FROM student
+        GROUP BY degree
+        ORDER BY degree
+    </select>
+
+    <!-- 统计每个班级的人数 -->
+    <select id="countByClazz" resultType="map">
+        SELECT c.name as name, COUNT(s.id) as value
+        FROM clazz c
+                 LEFT JOIN student s ON c.id = s.clazz_id
+        GROUP BY c.id, c.name
+        ORDER BY c.id
+    </select>
+
 </mapper>
