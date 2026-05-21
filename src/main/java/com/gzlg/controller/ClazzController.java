@@ -1,0 +1,88 @@
+package com.gzlg.controller;
+
+import com.gzlg.pojo.Clazz;
+import com.gzlg.pojo.ClazzQueryParam;
+import com.gzlg.pojo.PageResult;
+import com.gzlg.pojo.Result;
+import com.gzlg.service.ClazzService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 班级管理
+ */
+@Slf4j
+@RestController
+@RequestMapping("/clazzs")
+public class ClazzController {
+
+    @Autowired
+    private ClazzService clazzService;
+
+    /**
+     * 条件分页查询班级列表
+     */
+    @GetMapping
+    public Result page(ClazzQueryParam clazzQueryParam) {
+        log.info("条件分页查询班级信息, 查询参数: {}", clazzQueryParam);
+        PageResult pageResult = clazzService.page(clazzQueryParam);
+        log.info("查询完成, 共{}条记录", pageResult.getTotal());
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 根据ID删除班级
+     */
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable Integer id) {
+        log.info("删除班级, ID: {}", id);
+        clazzService.deleteById(id);
+        log.info("删除班级成功, ID: {}", id);
+        return Result.success();
+    }
+
+    /**
+     * 添加班级
+     */
+    @PostMapping
+    public Result save(@RequestBody Clazz clazz) {
+        log.info("添加班级: {}", clazz);
+        clazzService.save(clazz);
+        log.info("添加班级成功");
+        return Result.success();
+    }
+
+    /**
+     * 根据ID查询班级信息
+     */
+    @GetMapping("/{id}")
+    public Result getInfo(@PathVariable Integer id) {
+        log.info("根据ID查询班级, ID: {}", id);
+        Clazz clazz = clazzService.getInfo(id);
+        return Result.success(clazz);
+    }
+
+    /**
+     * 更新班级信息
+     */
+    @PutMapping
+    public Result update(@RequestBody Clazz clazz) {
+        log.info("更新班级信息: {}", clazz);
+        clazzService.update(clazz);
+        log.info("更新班级信息成功");
+        return Result.success();
+    }
+
+    /**
+     * 查询所有班级
+     */
+    @GetMapping("/list")
+    public Result listAll() {
+        log.info("查询所有班级信息");
+        List<Clazz> clazzList = clazzService.listAll();
+        return Result.success(clazzList);
+    }
+}
