@@ -65,4 +65,63 @@ public class EmpServiceImpl implements EmpService {
         }
 
     }
+
+    /**
+     * 根据ID删除员工（含经历信息）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteByIds(List<Integer> ids) {
+        log.debug("开始删除员工, ID: {}", ids);
+        //删除员工基本信息
+        empMapper.deleteByIds(ids);
+        //删除员工经历信息
+        empExprMapper.deleteByEmpIds(ids);
+        log.debug("删除员工完成, ID: {}", ids);
+    }
+
+    /**
+     * 根据id查询员工基本信息和工作经历
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Emp getInfo(Integer id) {
+        Emp emp = empMapper.selectById(id);
+        if (emp != null) {
+            emp.setExprList(empExprMapper.selectByEmpId(id));
+        }
+        return emp;
+    }
+
+    /**
+     * 更新员工信息（基础信息+工作经历）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(Emp emp) {
+        //更新员工基本信息
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.updateById(emp);
+
+        //先删除该员工所有工作经历
+        empExprMapper.deleteByEmpIds(List.of(emp.getId()));
+
+        //再批量插入新的工作经历
+        List<EmpExpr> exprList = emp.getExprList();
+        if (!CollectionUtils.isEmpty(exprList)) {
+            exprList.forEach(empExpr -> {
+                empExpr.setEmpId(emp.getId());
+            });
+            empExprMapper.insertBatch(exprList);
+        }
+    }
+
+    /**
+     * 查询所有员工
+     */
+    @Override
+    public List<Emp> listAll() {
+        return empMapper.listAll();
+    }
+
 }

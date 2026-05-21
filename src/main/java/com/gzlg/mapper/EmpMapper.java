@@ -25,4 +25,24 @@ public interface EmpMapper {
     @Insert("insert into emp(username, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time) " +
             "values (#{username},#{name},#{gender},#{phone},#{job},#{salary},#{image},#{entryDate},#{deptId},#{createTime},#{updateTime})")
     void insert(Emp emp);
+
+    /**
+     * 根据ID删除员工基本信息
+     */
+    void deleteByIds(List<Integer> ids);
+
+    /**
+     * 根据ID查询员工基本信息
+     */
+    Emp selectById(Integer id);
+
+    /**
+     * 根据ID更新员工基本信息
+     */
+    void updateById(Emp emp);
+
+    /**
+     * 查询全部员工
+     */
+    List<Emp> listAll();
 }

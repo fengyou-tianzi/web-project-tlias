@@ -2,6 +2,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gzlg.mapper.EmpMapper">
+
+    <!-- 根据ID更新员工基本信息 -->
+    <update id="updateById">
+        update emp
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 条件分页查询员工基本信息 -->
     <select id="list" resultType="com.gzlg.pojo.Emp">
         select e.id, e.username, e.name, e.gender,e.image,e.job, e.salary ,e.entry_date, e.dept_id, d.name
         deptName,e.create_time, e.update_time
@@ -20,4 +41,51 @@
         </where>
         order by e.update_time desc
     </select>
+
+    <!--根据ID查询员工基本信息-->
+    <select id="selectById" resultType="com.gzlg.pojo.Emp">
+        select id,
+               username,
+               name,
+               gender,
+               phone,
+               job,
+               salary,
+               image,
+               entry_date,
+               dept_id,
+               create_time,
+               update_time
+        from emp
+        where id = #{id}
+    </select>
+
+    <!-- 查询全部员工 -->
+    <select id="listAll" resultType="com.gzlg.pojo.Emp">
+        select id,
+               username,
+               password,
+               name,
+               gender,
+               image,
+               job,
+               salary,
+               entry_date,
+               dept_id,
+               create_time,
+               update_time
+        from emp
+        order by update_time desc
+    </select>
+
+    <!-- 根据ID删除员工基本信息 -->
+    <delete id="deleteByIds">
+        delete
+        from emp
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>
