@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 员工管理 Service 实现类
@@ -161,6 +164,25 @@ public class EmpServiceImpl implements EmpService {
         List<Emp> list = empMapper.listAll();
         log.debug("查询所有员工完成, 共{}条记录", list.size());
         return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getEmpGenderData() {
+        log.debug("开始统计员工性别信息");
+        List<Map<String, Object>> genderList = empMapper.countByGender();
+        log.debug("员工性别统计完成, 共{}种性别", genderList.size());
+        return genderList;
+    }
+
+    @Override
+    public Map<String, Object> getEmpJobData() {
+        log.debug("开始统计员工职位人数");
+        List<Map<String, Object>> jobList = empMapper.countByJob();
+        Map<String, Object> result = new HashMap<>();
+        result.put("jobList", jobList.stream().map(m -> m.get("name")).collect(Collectors.toList()));
+        result.put("dataList", jobList.stream().map(m -> m.get("value")).collect(Collectors.toList()));
+        log.debug("员工职位统计完成, 共{}种职位", jobList.size());
+        return result;
     }
 
 }

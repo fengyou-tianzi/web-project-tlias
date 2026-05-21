@@ -88,4 +88,27 @@
         </foreach>
     </delete>
 
+    <select id="countByGender" resultType="map">
+        SELECT CASE gender WHEN 1 THEN '男性员工' WHEN 2 THEN '女性员工' END as name,
+               COUNT(*)                                                    as value
+        FROM emp
+        WHERE gender IN (1, 2)
+        GROUP BY gender
+        ORDER BY gender
+    </select>
+
+    <select id="countByJob" resultType="map">
+        SELECT CASE job
+                   WHEN 1 THEN '班主任'
+                   WHEN 2 THEN '讲师'
+                   WHEN 3 THEN '学工主管'
+                   WHEN 4 THEN '教研主管'
+                   WHEN 5 THEN '咨询师'
+                   ELSE '其他' END as name,
+               COUNT(*)            as value
+        FROM emp
+        GROUP BY job
+        ORDER BY job
+    </select>
+
 </mapper>

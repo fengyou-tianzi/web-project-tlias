@@ -5,6 +5,7 @@ import com.gzlg.pojo.EmpQueryparam;
 import com.gzlg.pojo.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 员工管理接口
@@ -40,4 +41,8 @@ public interface EmpService {
      * 查询全部员工
      */
     List<Emp> listAll();
+
+    List<Map<String, Object>> getEmpGenderData();
+
+    Map<String, Object> getEmpJobData();
 }
