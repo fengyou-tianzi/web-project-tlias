@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -82,5 +84,30 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void violation(Integer id, Integer score) {
         studentMapper.updateViolation(id, score);
+    }
+
+    /**
+     * 统计学员学历分布
+     */
+    @Override
+    public List<Map<String, Object>> getStudentDegreeData() {
+        log.debug("开始统计学员学历分布");
+        List<Map<String, Object>> degreeList = studentMapper.countByDegree();
+        log.debug("学员学历统计完成, 共{}种学历", degreeList.size());
+        return degreeList;
+    }
+
+    /**
+     * 统计每个班级的人数
+     */
+    @Override
+    public Map<String, Object> getStudentCountData() {
+        log.debug("开始统计每个班级的人数");
+        List<Map<String, Object>> clazzList = studentMapper.countByClazz();
+        Map<String, Object> result = new HashMap<>();
+        result.put("clazzList", clazzList.stream().map(m -> m.get("name")).collect(Collectors.toList()));
+        result.put("dataList", clazzList.stream().map(m -> m.get("value")).collect(Collectors.toList()));
+        log.debug("班级人数统计完成, 共{}个班级", clazzList.size());
+        return result;
     }
 }

@@ -2,6 +2,7 @@ package com.gzlg.controller;
 
 import com.gzlg.pojo.Result;
 import com.gzlg.service.EmpService;
+import com.gzlg.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ public class ReportController {
     @Autowired
     private EmpService empService;
 
+    @Autowired
+    private StudentService studentService;
+
     @GetMapping("/empGenderData")
     public Result empGenderData() {
         log.info("统计员工性别信息");
@@ -31,5 +35,25 @@ public class ReportController {
         log.info("统计员工职位人数");
         Map<String, Object> jobData = empService.getEmpJobData();
         return Result.success(jobData);
+    }
+
+    /**
+     * 统计学员学历分布
+     */
+    @GetMapping("/studentDegreeData")
+    public Result studentDegreeData() {
+        log.info("统计学员学历信息");
+        List<Map<String, Object>> degreeList = studentService.getStudentDegreeData();
+        return Result.success(degreeList);
+    }
+
+    /**
+     * 统计每个班级的人数
+     */
+    @GetMapping("/studentCountData")
+    public Result studentCountData() {
+        log.info("统计班级学员人数");
+        Map<String, Object> countData = studentService.getStudentCountData();
+        return Result.success(countData);
     }
 }

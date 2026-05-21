@@ -5,6 +5,7 @@ import com.gzlg.pojo.StudentQueryParam;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学员Mapper
@@ -41,4 +42,14 @@ public interface StudentMapper {
      * 违纪处理（增加违纪次数和扣分）
      */
     void updateViolation(Integer id, Integer score);
+
+    /**
+     * 统计学员学历分布
+     */
+    List<Map<String, Object>> countByDegree();
+
+    /**
+     * 统计每个班级的人数
+     */
+    List<Map<String, Object>> countByClazz();
 }
