@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- 定义日志文件存放的文件夹路径 -->
     <property name="LOG_HOME" value="./logs" />
-    <!-- 定义日志输出格式 -->
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
-    <!-- 定义彩色日志输出格式 -->
     <property name="CONSOLE_LOG_PATTERN" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %cyan(%logger{50}) - %msg%n" />
 
-    <!-- ==================== Appender 配置区 ==================== -->
-
-    <!-- CONSOLE: 输出到控制台，支持彩色 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -17,7 +11,6 @@
         </encoder>
     </appender>
 
-    <!-- FILE: 输出到文件，支持按日期和大小自动分割 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -32,15 +25,16 @@
         </encoder>
     </appender>
 
-    <!-- ERROR_FILE: 单独记录ERROR级别日志，便于排查问题 -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/error.log</file>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>90</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+            <totalSizeCap>3GB</totalSizeCap>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${LOG_PATTERN}</pattern>
@@ -48,23 +42,29 @@
         </encoder>
     </appender>
 
-    <!-- ==================== Logger 配置区 ==================== -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="FILE" />
+    </appender>
 
-    <!-- Spring框架: 设置为WARN减少无关日志 -->
+    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>256</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="ERROR_FILE" />
+    </appender>
+
     <logger name="org.springframework" level="WARN" />
-    <!-- Spring Web: 设置为DEBUG查看请求详情 -->
     <logger name="org.springframework.web" level="DEBUG" />
-    <!-- MyBatis Mapper: 设置为DEBUG可查看SQL语句和参数 -->
     <logger name="com.gzlg.mapper" level="DEBUG" />
-    <!-- MyBatis: 设置为INFO -->
     <logger name="org.mybatis" level="INFO" />
-    <!-- 项目包: 设置为DEBUG，开发环境可查看详细日志 -->
     <logger name="com.gzlg" level="DEBUG" />
 
-    <!-- ==================== Root Logger ==================== -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-        <appender-ref ref="ERROR_FILE" />
+        <appender-ref ref="ASYNC_FILE" />
+        <appender-ref ref="ASYNC_ERROR_FILE" />
     </root>
 </configuration>

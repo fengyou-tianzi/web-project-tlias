@@ -50,20 +50,19 @@ public class EmpServiceImpl implements EmpService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(Emp emp) {
-
-        //添加员工基本信息
+        log.debug("开始添加员工, 姓名: {}", emp.getName());
         emp.setCreateTime(LocalDateTime.now());
         emp.setUpdateTime(LocalDateTime.now());
         empMapper.insert(emp);
 
-        //批量添加员工经历信息
         Integer empId = emp.getId();
         List<EmpExpr> exprList = emp.getExprList();
         if (!CollectionUtils.isEmpty(exprList)) {
+            log.debug("批量添加员工经历, 员工ID: {}, 经历数量: {}", empId, exprList.size());
             exprList.forEach(empExpr -> empExpr.setEmpId(empId));
             empExprMapper.insertBatch(exprList);
         }
-
+        log.debug("添加员工完成, 员工ID: {}", empId);
     }
 
     /**
@@ -86,9 +85,13 @@ public class EmpServiceImpl implements EmpService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Emp getInfo(Integer id) {
+        log.debug("开始查询员工详情, ID: {}", id);
         Emp emp = empMapper.selectById(id);
         if (emp != null) {
             emp.setExprList(empExprMapper.selectByEmpId(id));
+            log.debug("查询员工详情完成, ID: {}, 包含{}条工作经历", id, emp.getExprList().size());
+        } else {
+            log.debug("未找到ID为{}的员工", id);
         }
         return emp;
     }
@@ -99,21 +102,21 @@ public class EmpServiceImpl implements EmpService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(Emp emp) {
-        //更新员工基本信息
+        log.debug("开始更新员工信息, ID: {}", emp.getId());
         emp.setUpdateTime(LocalDateTime.now());
         empMapper.updateById(emp);
 
-        //先删除该员工所有工作经历
         empExprMapper.deleteByEmpIds(List.of(emp.getId()));
 
-        //再批量插入新的工作经历
         List<EmpExpr> exprList = emp.getExprList();
         if (!CollectionUtils.isEmpty(exprList)) {
+            log.debug("重新插入员工工作经历, 员工ID: {}, 经历数量: {}", emp.getId(), exprList.size());
             exprList.forEach(empExpr -> {
                 empExpr.setEmpId(emp.getId());
             });
             empExprMapper.insertBatch(exprList);
         }
+        log.debug("更新员工信息完成, ID: {}", emp.getId());
     }
 
     /**
@@ -121,7 +124,10 @@ public class EmpServiceImpl implements EmpService {
      */
     @Override
     public List<Emp> listAll() {
-        return empMapper.listAll();
+        log.debug("开始查询所有员工");
+        List<Emp> list = empMapper.listAll();
+        log.debug("查询所有员工完成, 共{}条记录", list.size());
+        return list;
     }
 
 }
