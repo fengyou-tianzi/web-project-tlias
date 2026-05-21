@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
+    <!-- ==================== 全局变量定义 ==================== -->
+
+    <!-- 日志文件存放目录 -->
     <property name="LOG_HOME" value="./logs" />
+
+    <!-- 文件日志输出格式：时间 线程名 日志级别 Logger名 - 消息 -->
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
+
+    <!-- 控制台日志输出格式（支持彩色高亮） -->
     <property name="CONSOLE_LOG_PATTERN" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %cyan(%logger{50}) - %msg%n" />
 
+    <!-- ==================== Appender 定义区 ==================== -->
+
+    <!--
+        CONSOLE: 控制台输出
+        适用场景：本地开发调试，实时查看日志
+    -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -11,6 +25,11 @@
         </encoder>
     </appender>
 
+    <!--
+        FILE: 全量日志文件输出
+        滚动策略：按日期+大小分割，单文件最大100MB，保留30天，总大小上限3GB
+        适用场景：生产环境全量日志留存，用于问题排查和审计
+    -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -25,6 +44,11 @@
         </encoder>
     </appender>
 
+    <!--
+        ERROR_FILE: 错误日志文件输出（仅记录 ERROR 级别）
+        滚动策略：按日期+大小分割，单文件最大100MB，保留90天，总大小上限3GB
+        适用场景：生产环境错误日志独立存储，便于快速定位系统故障
+    -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/error.log</file>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -42,6 +66,13 @@
         </encoder>
     </appender>
 
+    <!--
+        ASYNC_FILE: 全量日志异步写入
+        包装 FILE appender，将日志写入操作放到独立线程，避免磁盘 I/O 阻塞业务线程
+        - queueSize: 异步队列容量，默认256，高并发场景可适当调大
+        - discardingThreshold: 设为0表示不丢弃任何级别的日志（默认INFO以下会被丢弃）
+        - neverBlock: 设为true表示队列满时不阻塞业务线程（可能丢失少量日志）
+    -->
     <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>512</queueSize>
         <discardingThreshold>0</discardingThreshold>
@@ -49,6 +80,10 @@
         <appender-ref ref="FILE" />
     </appender>
 
+    <!--
+        ASYNC_ERROR_FILE: 错误日志异步写入
+        包装 ERROR_FILE appender，错误日志同样异步写入避免影响业务性能
+    -->
     <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <discardingThreshold>0</discardingThreshold>
@@ -56,15 +91,34 @@
         <appender-ref ref="ERROR_FILE" />
     </appender>
 
+    <!-- ==================== Logger 配置区 ==================== -->
+
+    <!-- Spring框架: WARN级别，减少框架内部无关日志 -->
     <logger name="org.springframework" level="WARN" />
+
+    <!-- Spring Web: DEBUG级别，便于查看请求映射和参数解析详情 -->
     <logger name="org.springframework.web" level="DEBUG" />
+
+    <!-- MyBatis Mapper: DEBUG级别，可打印SQL语句和参数绑定 -->
     <logger name="com.gzlg.mapper" level="DEBUG" />
+
+    <!-- MyBatis框架: INFO级别，减少框架内部日志 -->
     <logger name="org.mybatis" level="INFO" />
+
+    <!-- 项目业务包: DEBUG级别，开发环境可查看详细的业务日志 -->
     <logger name="com.gzlg" level="DEBUG" />
 
+    <!-- ==================== Root Logger ==================== -->
+
+    <!--
+        根日志级别: INFO
+        输出到: 控制台 + 异步全量文件 + 异步错误文件
+        注意: 文件输出使用异步Appender，控制台保持同步输出便于开发调试
+    -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="ASYNC_FILE" />
         <appender-ref ref="ASYNC_ERROR_FILE" />
     </root>
+
 </configuration>
