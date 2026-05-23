@@ -88,15 +88,28 @@
         </foreach>
     </delete>
 
+    <!--
+    按性别统计员工人数
+    无参数
+    @return List<Map> 每项包含 name(性别标签：男性员工/女性员工) 和 value(该性别员工数量)
+    -->
     <select id="countByGender" resultType="map">
-        SELECT CASE gender WHEN 1 THEN '男性员工' WHEN 2 THEN '女性员工' END as name,
-               COUNT(*)                                                    as value
+        SELECT CASE gender
+                   WHEN 1 THEN '男性员工'
+                   WHEN 2 THEN '女性员工'
+                   END  as name,
+               COUNT(*) as value
         FROM emp
         WHERE gender IN (1, 2)
         GROUP BY gender
         ORDER BY gender
     </select>
 
+    <!--
+    按职位统计员工人数
+    无参数
+    @return List<Map> 每项包含 name(职位名称：班主任/讲师/学工主管/教研主管/咨询师/其他) 和 value(该职位员工数量)
+    -->
     <select id="countByJob" resultType="map">
         SELECT CASE job
                    WHEN 1 THEN '班主任'

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 报表数据控制器
+ */
 @Slf4j
 @RestController
 @RequestMapping("/report")
@@ -23,6 +26,11 @@ public class ReportController {
     @Autowired
     private StudentService studentService;
 
+    /**
+     * 统计员工性别分布数据
+     *
+     * @return Result 包含性别统计列表，每项为 Map（name: 性别标签，value: 人数）
+     */
     @GetMapping("/empGenderData")
     public Result empGenderData() {
         log.info("统计员工性别信息");
@@ -30,6 +38,11 @@ public class ReportController {
         return Result.success(genderList);
     }
 
+    /**
+     * 统计员工职位分布数据
+     *
+     * @return Result 包含职位统计数据，Map 中含职位标签与对应人数
+     */
     @GetMapping("/empJobData")
     public Result empJobData() {
         log.info("统计员工职位人数");

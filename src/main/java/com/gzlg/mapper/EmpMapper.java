@@ -47,7 +47,17 @@ public interface EmpMapper {
      */
     List<Emp> listAll();
 
+    /**
+     * 按性别统计员工人数
+     *
+     * @return 性别统计列表，每项 Map 包含 name（性别标签）和 value（人数）
+     */
     List<Map<String, Object>> countByGender();
 
+    /**
+     * 按职位统计员工人数
+     *
+     * @return 职位统计列表，每项 Map 包含 name（职位名称）和 value（人数）
+     */
     List<Map<String, Object>> countByJob();
 }
