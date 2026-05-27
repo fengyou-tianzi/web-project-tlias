@@ -60,4 +60,6 @@ public interface EmpMapper {
      * @return 职位统计列表，每项 Map 包含 name（职位名称）和 value（人数）
      */
     List<Map<String, Object>> countByJob();
+
+    Emp getByUsernameAndPassword(String username, String password);
 }
