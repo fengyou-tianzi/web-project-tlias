@@ -1,0 +1,101 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzlg.mapper.StudentMapper">
+
+    <select id="list" resultType="com.gzlg.pojo.Student">
+        select s.id, s.name, s.no, s.gender, s.phone, s.degree, s.id_card,
+               s.is_college, s.address, s.graduation_date, s.violation_count,
+               s.violation_score, s.clazz_id, s.create_time, s.update_time,
+               c.name clazzName
+        from student s
+        left join clazz c on s.clazz_id = c.id
+        <where>
+            <if test="name != null and name != ''">
+                and s.name like concat('%', #{name}, '%')
+            </if>
+            <if test="degree != null">
+                and s.degree = #{degree}
+            </if>
+            <if test="clazzId != null">
+                and s.clazz_id = #{clazzId}
+            </if>
+        </where>
+        order by s.update_time desc
+    </select>
+
+    <delete id="deleteByIds">
+        delete from student where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into student(name, no, gender, phone, degree, id_card, is_college,
+                            address, graduation_date, violation_count, violation_score,
+                            clazz_id, create_time, update_time)
+        values (#{name}, #{no}, #{gender}, #{phone}, #{degree}, #{idCard}, #{isCollege},
+                #{address}, #{graduationDate}, #{violationCount}, #{violationScore},
+                #{clazzId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <select id="selectById" resultType="com.gzlg.pojo.Student">
+        select id, name, no, gender, phone, degree, id_card, is_college,
+               address, graduation_date, violation_count, violation_score,
+               clazz_id, create_time, update_time
+        from student
+        where id = #{id}
+    </select>
+
+    <update id="updateById">
+        update student
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="no != null">no = #{no},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="degree != null">degree = #{degree},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="isCollege != null">is_college = #{isCollege},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="graduationDate != null">graduation_date = #{graduationDate},</if>
+            <if test="violationCount != null">violation_count = #{violationCount},</if>
+            <if test="violationScore != null">violation_score = #{violationScore},</if>
+            <if test="clazzId != null">clazz_id = #{clazzId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateViolation">
+        update student
+        set violation_count = violation_count + 1,
+            violation_score = violation_score + #{score},
+            update_time = now()
+        where id = #{id}
+    </update>
+
+    <select id="countByDegree" resultType="map">
+        SELECT CASE degree
+                   WHEN 1 THEN '初中'
+                   WHEN 2 THEN '高中'
+                   WHEN 3 THEN '大专'
+                   WHEN 4 THEN '本科'
+                   WHEN 5 THEN '硕士'
+                   ELSE '其他' END as name,
+               COUNT(*)           as value
+        FROM student
+        GROUP BY degree
+        ORDER BY degree
+    </select>
+
+    <select id="countByClazz" resultType="map">
+        SELECT c.name as name, COUNT(s.id) as value
+        FROM clazz c
+                 LEFT JOIN student s ON c.id = s.clazz_id
+        GROUP BY c.id, c.name
+        ORDER BY c.id
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzlg.mapper.EmpMapper">
+
+    <update id="updateById">
+        update emp
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="list" resultType="com.gzlg.pojo.Emp">
+        select e.id, e.username, e.name, e.gender,e.image,e.job, e.salary ,e.entry_date, e.dept_id, d.name
+        deptName,e.create_time, e.update_time
+        from emp e
+        left join dept d on e.dept_id = d.id
+        <where>
+            <if test="name != null and name != ''">
+                and e.name like concat('%',#{name},'%')
+            </if>
+            <if test="gender != null">
+                and e.gender = #{gender}
+            </if>
+            <if test="begin != null and end != null">
+                and e.entry_date between #{begin} and #{end}
+            </if>
+        </where>
+        order by e.update_time desc
+    </select>
+
+    <select id="selectById" resultType="com.gzlg.pojo.Emp">
+        select id,
+               username,
+               name,
+               gender,
+               phone,
+               job,
+               salary,
+               image,
+               entry_date,
+               dept_id,
+               create_time,
+               update_time
+        from emp
+        where id = #{id}
+    </select>
+
+    <select id="listAll" resultType="com.gzlg.pojo.Emp">
+        select id,
+               username,
+               password,
+               name,
+               gender,
+               image,
+               job,
+               salary,
+               entry_date,
+               dept_id,
+               create_time,
+               update_time
+        from emp
+        order by update_time desc
+    </select>
+
+    <delete id="deleteByIds">
+        delete
+        from emp
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countByGender" resultType="map">
+        SELECT CASE gender
+                   WHEN 1 THEN '男性员工'
+                   WHEN 2 THEN '女性员工'
+                   END  as name,
+               COUNT(*) as value
+        FROM emp
+        WHERE gender IN (1, 2)
+        GROUP BY gender
+        ORDER BY gender
+    </select>
+
+    <select id="countByJob" resultType="map">
+        SELECT CASE job
+                   WHEN 1 THEN '班主任'
+                   WHEN 2 THEN '讲师'
+                   WHEN 3 THEN '学工主管'
+                   WHEN 4 THEN '教研主管'
+                   WHEN 5 THEN '咨询师'
+                   ELSE '其他' END as name,
+               COUNT(*)            as value
+        FROM emp
+        GROUP BY job
+        ORDER BY job
+    </select>
+
+    <select id="getByUsernameAndPassword" resultType="com.gzlg.pojo.Emp">
+        select id, username, password, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time
+        from emp
+        where username = #{username} and password = #{password}
+    </select>
+
+</mapper>
