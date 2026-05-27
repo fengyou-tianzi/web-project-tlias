@@ -2,6 +2,7 @@ package com.gzlg.service;
 
 import com.gzlg.pojo.Emp;
 import com.gzlg.pojo.EmpQueryparam;
+import com.gzlg.pojo.LoginInfo;
 import com.gzlg.pojo.PageResult;
 
 import java.util.List;
@@ -45,4 +46,6 @@ public interface EmpService {
     List<Map<String, Object>> getEmpGenderData();
 
     Map<String, Object> getEmpJobData();
+
+    LoginInfo login(Emp emp);
 }

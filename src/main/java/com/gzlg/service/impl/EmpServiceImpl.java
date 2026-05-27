@@ -7,6 +7,7 @@ import com.gzlg.mapper.EmpMapper;
 import com.gzlg.pojo.Emp;
 import com.gzlg.pojo.EmpExpr;
 import com.gzlg.pojo.EmpQueryparam;
+import com.gzlg.pojo.LoginInfo;
 import com.gzlg.pojo.PageResult;
 import com.gzlg.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -183,6 +185,22 @@ public class EmpServiceImpl implements EmpService {
         result.put("dataList", jobList.stream().map(m -> m.get("value")).collect(Collectors.toList()));
         log.debug("员工职位统计完成, 共{}种职位", jobList.size());
         return result;
+    }
+
+    @Override
+    public LoginInfo login(Emp emp) {
+        log.debug("开始登录, 用户名: {}", emp.getUsername());
+        Emp loginEmp = empMapper.getByUsernameAndPassword(emp.getUsername(), emp.getPassword());
+        if (loginEmp == null) {
+            throw new BusinessException("用户名或密码错误");
+        }
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setId(loginEmp.getId());
+        loginInfo.setUsername(loginEmp.getUsername());
+        loginInfo.setName(loginEmp.getName());
+        loginInfo.setToken(UUID.randomUUID().toString().replace("-", ""));
+        log.debug("登录成功, 用户名: {}, 姓名: {}", loginEmp.getUsername(), loginEmp.getName());
+        return loginInfo;
     }
 
 }

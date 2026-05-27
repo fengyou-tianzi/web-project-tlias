@@ -124,4 +124,10 @@
         ORDER BY job
     </select>
 
+    <select id="getByUsernameAndPassword" resultType="com.gzlg.pojo.Emp">
+        select id, username, password, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time
+        from emp
+        where username = #{username} and password = #{password}
+    </select>
+
 </mapper>
