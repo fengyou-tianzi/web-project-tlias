@@ -31,7 +31,10 @@ page helper:
   # helper-dialect: 指定分页使用的数据库方言为 MySQL
   helper-dialect: mysql
 
-#spring事务管理日志
+jwt:
+  secret-key: dGxpYXNfand0X3NlY3JldF9rZXlfMjAyNA==
+  expiration: 86400000
+
 logging:
   level:
     org.springframework.jdbc.support.JdbcTransactionManager: debug

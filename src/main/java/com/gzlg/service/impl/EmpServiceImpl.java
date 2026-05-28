@@ -10,6 +10,7 @@ import com.gzlg.pojo.EmpQueryparam;
 import com.gzlg.pojo.LoginInfo;
 import com.gzlg.pojo.PageResult;
 import com.gzlg.service.EmpService;
+import com.gzlg.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +40,9 @@ public class EmpServiceImpl implements EmpService {
 
     @Autowired
     private EmpExprMapper empExprMapper;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     /**
      * 条件分页查询员工列表
@@ -198,7 +201,7 @@ public class EmpServiceImpl implements EmpService {
         loginInfo.setId(loginEmp.getId());
         loginInfo.setUsername(loginEmp.getUsername());
         loginInfo.setName(loginEmp.getName());
-        loginInfo.setToken(UUID.randomUUID().toString().replace("-", ""));
+        loginInfo.setToken(jwtUtils.generateToken(loginEmp.getId(), loginEmp.getUsername()));
         log.debug("登录成功, 用户名: {}, 姓名: {}", loginEmp.getUsername(), loginEmp.getName());
         return loginInfo;
     }

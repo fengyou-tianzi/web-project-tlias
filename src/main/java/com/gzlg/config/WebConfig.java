@@ -1,5 +1,6 @@
 package com.gzlg.config;
 
+import com.gzlg.interceptor.LoginCheckInterceptor;
 import com.gzlg.interceptor.RequestLoggingInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private RequestLoggingInterceptor requestLoggingInterceptor;
 
+    @Autowired
+    private LoginCheckInterceptor loginCheckInterceptor;
+
     /**
      * 注册拦截器
      * <p>
@@ -40,6 +44,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(requestLoggingInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/error", "/image/**");
+
+        registry.addInterceptor(loginCheckInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login", "/error", "/image/**");
     }
 
     @Override
